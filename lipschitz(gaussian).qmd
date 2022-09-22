@@ -77,8 +77,8 @@ This is the main result of this section. The next few slides state some lemma th
 - $Y = \sum_{k=1}^n Z_k^2 \sim \chi^2(n)$
 
 ::: {.incremental}
-- $\sqrt{Y}{\sqrt{n}} = \norm{(Z_1, ..., Z_n)}/\sqrt{n}$ is 1-Lipschitz
-- $\Eb[\sqrt{Y}{\sqrt{n}}] \leq 1$
+- $\frac{\sqrt{Y}}{\sqrt{n}} = \norm{(Z_1, ..., Z_n)}/\sqrt{n}$ is 1-Lipschitz
+- $\Eb[\sqrt{Y}/{\sqrt{n}}] \leq 1$
 - Theroem 2.26 implies
 $$
 \Pb\left( Y/n \geq (1 + \delta)^2 \right) \leq e^{-n \delta^2 / 2}
@@ -210,7 +210,7 @@ c) Prove that $\lim_{n \to \infty} \frac{\Eb[Z_n]}{\sqrt{2 \sigma^2  \log n}} = 
 
 ## Exercise 2.17
 
-$X_i \sim N(0,1)$, $Z = \sum_{i=1}^n \sum_{j = 1^n} Q_{ij} X_i X_j$. Show
+$X_i \sim N(0,1)$, $Z = \sum_{i=1}^n \sum_{j = 1^n} Q_{ij} X_i X_j$, and $Q$ positive semidefinite. Show
 $$
 \Pb\left(Z \geq \mathrm{trace}(Q) + \sigma t\right) \leq 2 \exp\left( -\min \left\{\frac{c_1 t}{\norm{Q}_2}, \frac{c_2 t^2}{\norm{Q}_F^2} \right\} \right)
 $$
