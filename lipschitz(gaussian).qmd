@@ -1,0 +1,218 @@
+---
+title: "Lipschitz Functions of Gaussian Variables"
+author: "Paul Schrimpf"
+date: last-modified
+format:
+  revealjs:
+    theme: night
+    width: 1600
+    height: 900
+    min-scale: 0.1
+#    title-slide-attributes:
+#     data-background-image: "tricouni.jpg"
+#    data-background-size: contain
+bibliography: highdim.bib
+
+# jupyter: julia-1.8
+# execute:
+#   cache: false
+---
+
+$$
+\def\R{{\mathbb{R}}}
+\def\Pb{{\mathbb{P}}}
+\def\Eb{{\mathbb{E}}}
+\newcommand{\norm}[1]{\left\Vert {#1} \right\Vert}
+\newcommand{\abs}[1]{\left\vert {#1} \right\vert}
+$$
+
+- Based on @wainwright2019 section 2.3
+
+# Preliminaries
+
+## Lipschitz Function
+
+::: {.def}
+
+### Lipschitz
+
+$f: \R^n \to \R$ is $L$-**Lipschitz** with respect to $\norm{\cdot}_2$ if
+$$
+\abs{f(x) - f(y)} \leq L \norm{x - y}_2
+$$
+$\forall x, y \in \R^n$
+
+:::
+
+# Main Result
+
+## Concentration of Lipschitz Functions
+
+::: {#thm}
+
+### Theorem 2.26
+
+Let $(X_1 , . . . , X_n )$ be a vector of i.i.d. standard Gaussian variables, and
+let $f : \R^n \to R$ be $L$-Lipschitz with respect to the Euclidean norm. Then the variable
+$f (X) − \Eb[ f (X)]$ is sub-Gaussian with parameter at most $L$, and hence
+$$
+\Pb\left(\abs{f (X) − \Eb[ f (X)]} \geq t\right) \leq 2e^{\frac{-t^2}{2 L^2}}
+$$
+for all t ≥ 0.
+
+:::
+
+::: {.notes}
+
+This is the main result of this section. The next few slides state some lemma that will be useful in the proof.
+
+:::
+
+
+# Examples
+
+## $\chi^2$ Concentration
+
+- $\{Z_k \} \sim$ i.i.d. $N(0,1)$
+- $Y = \sum_{k=1}^n Z_k^2 \sim \chi^2(n)$
+
+::: {.incremental}
+- $\sqrt{Y}{\sqrt{n}} = \norm{(Z_1, ..., Z_n)}/\sqrt{n}$ is 1-Lipschitz
+- $\Eb[\sqrt{Y}{\sqrt{n}}] \leq 1$
+- Theroem 2.26 implies
+$$
+\Pb\left( Y/n \geq (1 + \delta)^2 \right) \leq e^{-n \delta^2 / 2}
+$$
+- or, for $t \in [0,3]$
+$$
+\Pb\left( Y \geq n(1 + t) \right) \leq e^{-n t^2 / 18}
+$$
+:::
+
+## Order Statistics
+
+- Given $(X_1, .... , X_n)$, order as $X_{(1)} \leq ... \leq X_{(n)}$
+- $|X_{(k)} - Y_{(k)}| \leq \norm{X-Y}_2$ is 1-Lipschitz
+- Theorem 2.26 implies
+$$
+\Pb \left( |X_{(k)} - \Eb[X_{(k)}]| \geq \delta \right) \leq 2e^{-\delta^2/2}
+$$
+
+## Gaussian Complexity
+
+- $f(w) = \sup_{a \in \mathcal{A}} \sum_{a_k} w_k = \sup_{a \in
+  \mathcal{A}} \langle a, w \rangle$ for $\mathcal A \subset \R^n$
+
+- $f(w) - f(w') \leq \underbrace{D(\mathcal{A})}_{\sup_{a \in
+    \mathcal{A}} \norm{a}_2} \norm{w - w'}_2$
+
+-  $Z = f(W)$, $W \sim N(0, I_n)$,  Theorem 2.26 implies
+$$
+\Pb \left( |Z - \Eb Z| \geq \delta \right) \leq 2e^{-\delta^2/(2D(\mathcal{A})^2)}
+$$
+
+
+## Gaussian Chaos
+
+## Singular Values
+
+- $X \in \R^{n \times d}$, $n > d$, $X_{ij} \sim N(0,1)$
+- $\max_k |\sigma_k(X) - \sigma_k(Y)| \leq \norm{X -Y}_2 \leq \norm{X - Y}_F$
+- Theorem 2.26 implies
+$$
+\Pb \left(  | \sigma_k(X) - \Eb[\sigma_k(X)]| \geq \delta \right) \leq 2 e^{-\delta^2/2}
+$$
+
+
+# Proof of Theorem 2.26
+
+## Sub-Gaussian Concentration
+
+::: {#prp}
+
+If $X$ is sub-Gaussian with mean $\mu$ and sub-Gaussian parameter $\sigma$, then
+$$
+\Pb\left[ | X - \mu | \geq t \right] \leq 2 e^{-\frac{t^2}{2 \sigma^2}}
+$$
+
+:::
+
+## Rademacher's Theorem
+
+::: {#thm}
+
+### Rademacher's Theorem
+
+Let $f:U \to \R^m$ for some open $U \subset \R^n$ be Lipschitz, then $f$ is differentiable almost everywhere in $U$.
+
+:::
+
+- Implication: sufficient to prove Theorem 2.26 for a differentiable Lipschitz function
+
+::: {.notes}
+
+Sketch of proof
+
+- For $n=m=1$, let $s(x) = \sum_i \alpha_i 1\{x < a_i\}$ be a simple function
+    - Define $I(s) = \sum_i \alpha_i f(a_{i})$, a bounded linear functional
+    - Simple functions dense in $\mathcal{L}^2$, so unique extension of $I$ to all of $\mathcal{L}^2$
+    - Riesz representer $f^*$ s.t. $I(g) = \langle f^* , g \rangle$
+    - $g = 1\{a < x < b}$,  $I(g) = f(b) - f(a) = \int_a^b f^*(x) dx$
+    - fundamental theorem of calculus says $f^* = df/dx$ a.e.
+- To extend to $n > 1$, need to deal with combining sets of measure
+    zero along any direction, somewhat long (of course, the 1 dimensional
+    argument is only "short" because it uses linear algebra results)
+
+:::
+
+## Lemma 2.27
+
+::: {#lem}
+
+Suppose $f: \R^n \to \R$ is differentiable. Then for any convex
+function $\phi: \R \to \R$,
+
+$$
+\Eb \left[ \phi\left( f(X) - \Eb[f(X)] \right) \right] \leq \Eb \left[ \phi \left( \frac{\pi}{2} \langle \nabla f(X), Y \rangle \right) \right]
+$$
+where $X, Y \sim N(0, I_n)$ and independent
+
+:::
+
+::: {.notes}
+
+The rotational invariance of the Gaussian distribution is used in the
+proof. The result can be extended to some other distributions, but not
+all sub-Gaussian distributions.
+
+:::
+
+## Proof of Theorem 2.26
+
+
+- Apply lemma 2.27 to show $f(X) - \Eb[f(X)]$ is sub-Gaussian with parameter at most $\frac{\pi L}{2}$
+- Theorem 2.26 (with a slightly worse constant) then follows from sub-Gaussian concentration inequality
+
+:::
+
+# Exercises
+
+## Exercise 2.11
+
+$X_i \sim N(0, \sigma^2)$, $Z_n = \max_{i = 1, ..., n} |X_i|$
+
+a) Prove that for $n \geq 2$,
+$\Eb[Z_n] \leq \sqrt{2 \sigma^2 \log n} + \frac{4 \sigma}{\sqrt{2 \log n}}$
+b) Prove that for $n \geq 5$,
+$\Eb[Z_n] \geq (1 - 1/e) \sqrt{2 \sigma^2 \log n}$
+c) Prove that $\lim_{n \to \infty} \frac{\Eb[Z_n]}{\sqrt{2 \sigma^2  \log n}} = 1$
+
+
+## Exercise 2.17
+
+$X_i \sim N(0,1)$, $Z = \sum_{i=1}^n \sum_{j = 1^n} Q_{ij} X_i X_j$. Show
+$$
+\Pb\left(Z \geq \mathrm{trace}(Q) + \sigma t\right) \leq 2 \exp\left( -\min \left\{\frac{c_1 t}{\norm{Q}_2}, \frac{c_2 t^2}{\norm{Q}_F^2} \right\} \right)
+$$
+
+# References
